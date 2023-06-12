@@ -70,12 +70,14 @@ class Cycling extends Workouts {
 class App {
   #map;
   #mapEvent;
-  #workouts = [];
+  #mapZoomLevel = 13;
+  #workoutsArr = [];
 
   constructor() {
     this._getPosition();
     inputType.addEventListener('change', this._toggleInputField);
     form.addEventListener('submit', this._newWorkout.bind(this));
+    containerWorkouts.addEventListener('click', this._moveToMaker.bind(this));
   }
   _getPosition() {
     if (navigator.geolocation) {
@@ -95,7 +97,7 @@ class App {
     const { longitude } = position.coords;
     const coords = [latitude, longitude];
 
-    this.#map = L.map('map').setView(coords, 13);
+    this.#map = L.map('map').setView(coords, this.#mapZoomLevel);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -159,7 +161,7 @@ class App {
       workout = new Cycling([lat, lng], duration, distance, elevGain);
     }
     // add object in workout array
-    this.#workouts.push(workout);
+    this.#workoutsArr.push(workout);
 
     // render maker on Map
     this._renderMaker(workout);
@@ -239,6 +241,24 @@ class App {
     </li>`;
     }
     containerWorkouts.insertAdjacentHTML('afterbegin', html);
+  }
+
+  // click each workout to move maker to center on the map
+  _moveToMaker(e) {
+    const clickedEl = e.target.closest('.workout');
+    if (!clickedEl) return;
+    const idEl = clickedEl.dataset.id;
+
+    // loop to find workout
+    const workout = this.#workoutsArr.find(wk => wk.id === idEl);
+
+    // move maker to center view port
+    this.#map.setView(workout.coords, this.#mapZoomLevel, {
+      animate: true,
+      pan: {
+        duration: 1,
+      },
+    });
   }
 }
 const app = new App();
