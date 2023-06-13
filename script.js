@@ -25,6 +25,7 @@ const inputElevation = document.querySelector('.form__input--elevation');
 class Workouts {
   current = new Date();
   id = (Date.now() + '').slice(-10);
+  click = 0;
 
   constructor(coords, distance, duration) {
     this.coords = coords;
@@ -104,6 +105,8 @@ class App {
     }).addTo(this.#map);
 
     this.#map.on('click', this._showForm.bind(this));
+
+    this._getLocalStorage();
   }
 
   _showForm(eMap) {
@@ -178,6 +181,9 @@ class App {
     form.style.display = 'none';
     form.classList.add('hidden');
     setTimeout(() => (form.style.display = 'grid'), 1000);
+
+    // Set local storage to all workouts
+    this._setLocalStorage();
   }
 
   // Render workout on map as marker
@@ -259,6 +265,26 @@ class App {
         duration: 1,
       },
     });
+  }
+
+  // store workout at localstorage
+  _setLocalStorage() {
+    localStorage.setItem('workout', JSON.stringify(this.#workoutsArr));
+  }
+
+  _getLocalStorage() {
+    const dataLocalWorkouts = JSON.parse(localStorage.getItem('workout'));
+    if (!dataLocalWorkouts) return;
+    this.#workoutsArr = dataLocalWorkouts;
+    this.#workoutsArr.forEach(wk => {
+      this._renderMaker(wk);
+      this._renderWorkoutList(wk);
+    });
+  }
+
+  _reset() {
+    localStorage.removeItem('workout');
+    location.reload();
   }
 }
 const app = new App();
