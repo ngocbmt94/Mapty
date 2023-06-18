@@ -23,6 +23,12 @@ const inputElevation = document.querySelector('.form__input--elevation');
 const sortType = document.querySelector('.sort--type');
 const sortDistance = document.querySelector('.sort--distance');
 const sortDuration = document.querySelector('.sort--duration');
+const sortContainer = document.querySelector('.sort-container');
+
+const btnSort = document.querySelector('.btn--sort');
+const btnOverview = document.querySelector('.btn--overview');
+const btnDeleteAll = document.querySelector('.btn--delete-all');
+const control = document.querySelector('.control');
 
 // store data workout
 class Workouts {
@@ -86,11 +92,13 @@ class App {
     this._getPosition();
     inputType.addEventListener('change', this._toggleInputField);
     form.addEventListener('submit', this._newWorkout.bind(this));
-    //containerWorkouts.addEventListener('click', this._moveToMaker.bind(this));
     containerWorkouts.addEventListener(
       'click',
       this._containerClick.bind(this)
     );
+    // btnSort.addEventListener('click', this._showSort);
+    control.addEventListener('click', this._controlBtn.bind(this));
+    sortContainer.addEventListener('click', this._sortType.bind(this));
   }
 
   _containerClick(e) {
@@ -158,6 +166,15 @@ class App {
     }
   }
 
+  // display btn control
+  _displayControl() {
+    if (this.#workoutsArr.length !== 0) {
+      control.classList.remove('control-hidden');
+    } else {
+      control.classList.add('control-hidden');
+    }
+  }
+
   // submit form
   _newWorkout(e) {
     e.preventDefault();
@@ -197,21 +214,20 @@ class App {
       lng = this.#mapEvent.latlng.lng;
 
       if (type === 'running')
-        workout = new Running([lat, lng], duration, distance, cadence);
+        workout = new Running([lat, lng], distance, duration, cadence);
       if (type === 'cycling')
-        workout = new Cycling([lat, lng], duration, distance, elevGain);
+        workout = new Cycling([lat, lng], distance, duration, elevGain);
     }
     // check submit to edit
     else {
       let wkEdit = this.#workoutsArr.find(ob => ob.id === form.dataset.id);
       if (type === 'running')
-        workout = new Running(wkEdit.coords, duration, distance, cadence);
+        workout = new Running(wkEdit.coords, distance, duration, cadence);
       if (type === 'cycling')
-        workout = new Cycling(wkEdit.coords, duration, distance, elevGain);
+        workout = new Cycling(wkEdit.coords, distance, duration, elevGain);
 
       this._delete(wkEdit);
     }
-
     // add object in workout array
     this.#workoutsArr.push(workout);
 
@@ -220,6 +236,9 @@ class App {
 
     // Render workout on list
     this._renderWorkoutList(workout);
+
+    // display control
+    this._displayControl();
 
     // Hide form + clear data input fields:
     inputDistance.value =
@@ -303,9 +322,6 @@ class App {
     </li>`;
     }
     containerWorkouts.insertAdjacentHTML('beforeend', html);
-
-    const editWorkout = document.querySelectorAll('.workout__icon--edit');
-    const deleteWorkout = document.querySelector('.workout__icon--delete');
   }
 
   // click each workout to move maker to center on the map
@@ -366,6 +382,54 @@ class App {
     for (let i = 0; i < wkUINodeList.length; i++) {
       if (wkUINodeList[i].dataset.id === workout.id) wkUINodeList[i].remove();
     }
+
+    // display control
+    this._displayControl();
+  }
+
+  _controlBtn(e) {
+    const clicked = e.target;
+    const showSort = function () {
+      btnSort.classList.toggle('active');
+      sortContainer.classList.toggle('sort-hidden');
+    };
+
+    if (clicked.classList.contains('btn--sort')) {
+      showSort();
+    }
+    if (clicked.classList.contains('btn--overview')) {
+      console.log(clicked);
+    }
+    if (clicked.classList.contains('btn--delete-all')) {
+      this.#workoutsArr.forEach(el => this._delete(el));
+
+      // delete all on localstorage
+      this._reset();
+    }
+  }
+
+  _sortType(e) {
+    const btnClicked = e.target;
+    const wkUINodeList = document.querySelectorAll('.workout');
+
+    if (btnClicked.classList.contains('sort--type')) {
+      this.#workoutsArr.sort((a, b) => {
+        if (a.type < b.type) return -1;
+        if (a.type > b.type) return 1;
+        return 0;
+      });
+    } else if (btnClicked.classList.contains('sort--distance')) {
+      this.#workoutsArr.sort((a, b) => a.distance - b.distance);
+    } else {
+      this.#workoutsArr.sort((a, b) => a.duration - b.duration);
+    }
+
+    this.#workoutsArr.forEach((el, i) => {
+      // delete UI and re-render new wk
+      wkUINodeList[i].remove();
+      this._renderWorkoutList(el);
+    });
+    // console.log(this.#workoutsArr);
   }
 
   // store workout at localstorage
@@ -382,6 +446,8 @@ class App {
       this._renderMaker(wk);
       this._renderWorkoutList(wk);
     });
+
+    this._displayControl();
   }
 
   _reset() {
