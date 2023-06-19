@@ -248,6 +248,7 @@ class App {
     form.classList.add('hidden');
     setTimeout(() => (form.style.display = 'grid'), 1000);
 
+    console.log(this.#workoutsArr);
     // Set local storage to all workouts
     this._setLocalStorage();
   }
@@ -386,6 +387,7 @@ class App {
   }
 
   _controlBtn(e) {
+    0;
     const clicked = e.target;
     const showSort = function () {
       btnSort.classList.toggle('active');
@@ -443,9 +445,23 @@ class App {
 
   _getLocalStorage() {
     const dataLocalWorkouts = JSON.parse(localStorage.getItem('workout'));
+    const addProroLocalWK = [];
+
     if (!dataLocalWorkouts) return;
 
-    this.#workoutsArr = dataLocalWorkouts;
+    // re-build prototype for each Object on Localstorage
+    dataLocalWorkouts.map(el => {
+      if (el.type === 'running')
+        addProroLocalWK.push(
+          new Running(el.coords, el.distance, el.duration, el.cadence)
+        );
+      if (el.type === 'cycling')
+        addProroLocalWK.push(
+          new Cycling(el.coords, el.distance, el.duration, el.elevGain)
+        );
+    });
+
+    this.#workoutsArr = addProroLocalWK;
     this.#workoutsArr.forEach(wk => {
       this._renderMaker(wk);
       this._renderWorkoutList(wk);
