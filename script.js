@@ -26,8 +26,6 @@ const sortDuration = document.querySelector('.sort--duration');
 const sortContainer = document.querySelector('.sort-container');
 
 const btnSort = document.querySelector('.btn--sort');
-const btnOverview = document.querySelector('.btn--overview');
-const btnDeleteAll = document.querySelector('.btn--delete-all');
 const control = document.querySelector('.control');
 
 // store data workout
@@ -398,7 +396,9 @@ class App {
       showSort();
     }
     if (clicked.classList.contains('btn--overview')) {
-      console.log(clicked);
+      // Automatically Zoom the map to fit all markers
+      const group = new L.featureGroup(this.#makerArr);
+      this.#map.fitBounds(group.getBounds());
     }
     if (clicked.classList.contains('btn--delete-all')) {
       this.#workoutsArr.forEach(el => this._delete(el));
@@ -411,6 +411,11 @@ class App {
   _sortType(e) {
     const btnClicked = e.target;
     const wkUINodeList = document.querySelectorAll('.workout');
+
+    [...btnClicked.parentElement.children].forEach(el =>
+      el.classList.remove('active')
+    );
+    btnClicked.classList.add('active');
 
     if (btnClicked.classList.contains('sort--type')) {
       this.#workoutsArr.sort((a, b) => {
@@ -429,7 +434,6 @@ class App {
       wkUINodeList[i].remove();
       this._renderWorkoutList(el);
     });
-    // console.log(this.#workoutsArr);
   }
 
   // store workout at localstorage
