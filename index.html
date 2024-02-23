@@ -21,9 +21,13 @@
   <body>
     <div class="sidebar">
       <img src="logo.png" alt="Logo" class="logo" />
-
+      <div class="control control-hidden">
+        <button class="control-btn btn--sort">SORT</button>
+        <button class="control-btn btn--overview">OVERVIEW</button>
+        <button class="control-btn btn--delete-all">DELETE ALL</button>
+      </div>
       <ul class="workouts">
-        <form class="form hidden">
+        <form class="form hidden" data-id="">
           <div class="form__row">
             <label class="form__label">Type</label>
             <select class="form__input form__input--type">
@@ -58,9 +62,23 @@
           </div>
           <button class="form__btn">OK</button>
         </form>
-
+        <div class="sort-container sort-hidden">
+          <button data-type="type" class="sort-btn sort--type">
+            &downarrow; Type
+          </button>
+          <button data-type="distance" class="sort-btn sort--distance">
+            &downarrow; Distance
+          </button>
+          <button data-type="Duration" class="sort-btn sort--duration">
+            &downarrow; Duration
+          </button>
+        </div>
         <!-- <li class="workout workout--running" data-id="1234567890">
           <h2 class="workout__title">Running on April 14</h2>
+          <div class="workout-group__icon">
+            <div class="workout__icon workout__icon--edit">🖋️</div>
+            <div class="workout__icon workout__icon--delete">🗑️</div>
+          </div>
           <div class="workout__details">
             <span class="workout__icon">🏃‍♂️</span>
             <span class="workout__value">5.2</span>
@@ -85,6 +103,10 @@
 
         <li class="workout workout--cycling" data-id="1234567891">
           <h2 class="workout__title">Cycling on April 5</h2>
+          <div class="workout-group__icon">
+            <div class="workout__icon workout__icon--edit">🖋️</div>
+            <div class="workout__icon workout__icon--delete">🗑️</div>
+          </div>
           <div class="workout__details">
             <span class="workout__icon">🚴‍♀️</span>
             <span class="workout__value">27</span>

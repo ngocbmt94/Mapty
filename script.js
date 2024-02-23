@@ -461,6 +461,9 @@ class App {
         );
     });
 
+    // console.log(dataLocalWorkouts[0]);
+    // console.log(addProroLocalWK[0]);
+
     this.#workoutsArr = addProroLocalWK;
     this.#workoutsArr.forEach(wk => {
       this._renderMaker(wk);
@@ -476,3 +479,29 @@ class App {
   }
 }
 const app = new App();
+// class Parent {
+//   constructor(nameParent) {
+//     this.nameParent = nameParent;
+//   }
+//   _setDescription() {
+//     return `${this.type[0].toUpperCase() + this.type.slice(1)}`;
+//   }
+// }
+// class Child extends Parent {
+//   type = 'this is class child';
+//   constructor(nameParent, nameChild, old) {
+//     super(nameParent);
+//     this.nameChild = nameChild;
+//     this.old = old;
+//   }
+// }
+// const uyen = new Child('tan', 'uyen', 2.5);
+// console.log(uyen._setDescription());
+
+// const logo = document.querySelector('.logo');
+// const callbackFn = function (str, e) {
+//   console.log(e, str);
+//   let fullStr = str.slice(0, 1).toUpperCase() + str.slice(1) + new Date();
+//   console.log(fullStr);
+// };
+// logo.addEventListener('click', callbackFn.bind(this, 'ten minh la'));
