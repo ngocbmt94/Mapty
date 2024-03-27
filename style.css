@@ -1,12 +1,13 @@
 :root {
   --color-brand--1: #ffb545;
-  --color-brand--2: #00c46a;
+  --color-brand--2: #00a5cc;
 
-  --color-dark--1: #2d3439;
-  --color-dark--2: #42484d;
-  --color-light--1: #aaa;
+  --color-dark--1: #00487b;
+  --color-dark--2: #517fa6;
+  --color-light--1: #001486;
   --color-light--2: #ececec;
   --color-light--3: rgb(214, 222, 224);
+  --color-light--4: #5c72f1;
 }
 
 * {
@@ -50,9 +51,9 @@ a:visited {
 }
 
 .logo {
-  height: 5.2rem;
+  height: 8.2rem;
   align-self: center;
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
 
 .workouts {
@@ -212,6 +213,13 @@ a:visited {
   background-color: var(--color-dark--1);
 }
 
+#map.leaflet-container a.leaflet-popup-close-button {
+  color: #fff;
+}
+#map.leaflet-container a.leaflet-popup-close-button:hover,
+#map.leaflet-container a.leaflet-popup-close-button:active {
+  color: var(--color-brand--2);
+}
 .running-popup .leaflet-popup-content-wrapper {
   border-left: 5px solid var(--color-brand--2);
 }
@@ -231,14 +239,14 @@ a:visited {
   margin: 0 0.2rem;
   color: white;
   background-color: transparent;
-  border: 1px solid var(--color-light--1);
+  border: 1px solid var(--color-light--4);
   border-radius: 5px;
   transition: all 0.25s ease-in-out;
   cursor: pointer;
 }
 .control-btn:hover,
 .control-btn.active {
-  background-color: var(--color-light--1);
+  background-color: var(--color-light--4);
 }
 .control-btn:first-child {
   margin-right: auto;
